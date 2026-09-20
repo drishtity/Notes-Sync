@@ -37,33 +37,33 @@ export function Navbar() {
     { id: 'todays-plan', label: "Today's Plan", icon: <CheckSquare className="w-4 h-4" />, requiresSubject: true },
     { id: 'study-plan', label: 'Study Plan', icon: <Clock className="w-4 h-4" />, requiresSubject: true },
     { id: 'syllabus-analysis', label: 'Syllabus', icon: <Layers className="w-4 h-4" />, requiresSubject: true },
-    { id: 'questions', label: 'Practice Questions', icon: <BookOpen className="w-4 h-4" />, requiresSubject: true },
+    { id: 'questions', label: 'Questions', icon: <BookOpen className="w-4 h-4" />, requiresSubject: true },
     { id: 'progress', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" />, requiresSubject: true },
   ];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-zinc-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between gap-2 sm:gap-4 min-w-0">
           
           {/* Logo & Tagline */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('landing')}>
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-sky-500 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
-              <Sparkles className="w-5 h-5" />
+          <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => setCurrentView('landing')}>
+            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-sky-500 flex items-center justify-center text-white shadow-xs">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-lg tracking-tight text-zinc-900">NotesSync</span>
-                <span className="text-[10px] uppercase font-semibold tracking-wider px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="font-bold text-base sm:text-lg tracking-tight text-zinc-900">NotesSync</span>
+                <span className="text-[10px] uppercase font-semibold tracking-wider px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 hidden sm:inline-block">
                   Decision Engine
                 </span>
               </div>
-              <p className="text-[11px] text-zinc-500 hidden sm:block">Your syllabus. Your time. Your plan.</p>
+              <p className="text-[11px] text-zinc-500 hidden md:block">Your syllabus. Your time. Your plan.</p>
             </div>
           </div>
 
-          {/* Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center space-x-1">
+          {/* Navigation Links (Desktop: xl and above) */}
+          <nav className="hidden xl:flex items-center space-x-1 shrink-0">
             {navItems.map((item) => {
               if (item.requiresSubject && !activeSubject) return null;
               const isActive = currentView === item.id;
@@ -71,9 +71,9 @@ export function Navbar() {
                 <button
                   key={item.id}
                   onClick={() => setCurrentView(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                     isActive
-                      ? 'bg-zinc-900 text-white shadow-sm'
+                      ? 'bg-zinc-900 text-white shadow-xs'
                       : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                   }`}
                 >
@@ -85,16 +85,16 @@ export function Navbar() {
           </nav>
 
           {/* Action Buttons & Subject Picker */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
             {/* What to study CTA: Compact, prominent, no text-wrap */}
             {activeSubject && (
               <button
                 onClick={() => setIsWhatToStudyOpen(true)}
-                className="whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition-all active:scale-95"
+                className="whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition-all active:scale-95"
                 title="AI recommendation of the single best next study topic"
               >
-                <Flame className="w-4 h-4 text-white fill-white animate-pulse shrink-0" />
+                <Flame className="w-3.5 h-3.5 text-white fill-white animate-pulse shrink-0" />
                 <span className="hidden sm:inline whitespace-nowrap">What should I study?</span>
                 <span className="sm:hidden whitespace-nowrap">Study Next</span>
               </button>
@@ -104,7 +104,7 @@ export function Navbar() {
             {activeSubject && (
               <button
                 onClick={() => setIsLimitedTimeOpen(true)}
-                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 rounded-lg transition"
+                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 rounded-lg transition shrink-0"
                 title="Generate a focus sprint for limited time (30m, 1h, 3h)"
               >
                 <Clock className="w-3.5 h-3.5 text-zinc-500" />
@@ -114,12 +114,12 @@ export function Navbar() {
 
             {/* Active Subject Selector Dropdown & Delete Button */}
             {subjects.length > 0 ? (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <div className="relative group">
                   <select
                     value={activeSubject?.id || ''}
                     onChange={(e) => setActiveSubjectId(e.target.value)}
-                    className="appearance-none text-xs sm:text-sm font-medium bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-w-[130px] sm:max-w-[190px] truncate"
+                    className="appearance-none text-xs font-medium bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-lg pl-2.5 pr-7 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-w-[105px] sm:max-w-[155px] truncate"
                   >
                     {subjects.map((sub) => (
                       <option key={sub.id} value={sub.id}>
@@ -127,13 +127,13 @@ export function Navbar() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
 
                 {activeSubject && (
                   <button
                     onClick={() => setSubjectToDelete(activeSubject)}
-                    className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition shrink-0"
+                    className="p-1 sm:p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition shrink-0"
                     title={`Delete subject "${activeSubject.name}"`}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -145,10 +145,10 @@ export function Navbar() {
             {/* Add Subject Button */}
             <button
               onClick={() => setCurrentView('add-subject')}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-xs"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-xs shrink-0 whitespace-nowrap"
               title="Add a new syllabus or subject"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               <span>Add Subject</span>
             </button>
 
@@ -156,16 +156,16 @@ export function Navbar() {
 
         </div>
 
-        {/* Mobile Navigation bar */}
+        {/* Sub-navigation bar for screens below xl */}
         {activeSubject && (
-          <div className="flex md:hidden overflow-x-auto py-2 space-x-1 border-t border-zinc-100 scrollbar-none">
+          <div className="flex xl:hidden overflow-x-auto py-2 space-x-1 border-t border-zinc-100 scrollbar-none">
             {navItems.map((item) => {
               const isActive = currentView === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setCurrentView(item.id)}
-                  className={`flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-colors shrink-0 ${
                     isActive
                       ? 'bg-zinc-900 text-white'
                       : 'text-zinc-600 hover:bg-zinc-100'

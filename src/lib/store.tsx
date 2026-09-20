@@ -52,13 +52,61 @@ const ACTIVE_SUB_KEY = 'notessync_active_sub_v1';
 export function NotesSyncProvider({ children }: { children: ReactNode }) {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [activeSubjectId, setActiveSubjectIdState] = useState<string | null>(null);
-  const [currentView, setCurrentView] = useState<ActiveView>('dashboard');
+  const [currentView, setCurrentViewState] = useState<ActiveView>('landing');
   const [isWhatToStudyOpen, setIsWhatToStudyOpen] = useState(false);
   const [isLimitedTimeOpen, setIsLimitedTimeOpen] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
   const [activeTimerTaskId, setActiveTimerTaskId] = useState<string | null>(null);
   const [autoStartTimer, setAutoStartTimer] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const setCurrentView = (view: ActiveView) => {
+    setCurrentViewState(view);
+    if (typeof window !== 'undefined') {
+      const targetPath = view === 'landing' ? '/' : view === 'add-subject' ? '/add-subject' : `/${view}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ view }, '', targetPath);
+      }
+    }
+  };
+
+  // Sync route on mount and browser navigation
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path === '/add-subject') {
+        setCurrentViewState('add-subject');
+      } else if (path === '/' || path === '') {
+        setCurrentViewState('landing');
+      } else {
+        const stripped = path.replace(/^\//, '') as ActiveView;
+        const validViews: ActiveView[] = [
+          'landing', 'dashboard', 'add-subject', 'syllabus-analysis', 
+          'questions', 'study-plan', 'todays-plan', 'progress'
+        ];
+        if (validViews.includes(stripped)) {
+          setCurrentViewState(stripped);
+        } else {
+          setCurrentViewState('landing');
+        }
+      }
+
+      const handlePopState = () => {
+        const p = window.location.pathname;
+        if (p === '/add-subject') {
+          setCurrentViewState('add-subject');
+        } else if (p === '/' || p === '') {
+          setCurrentViewState('landing');
+        } else {
+          const s = p.replace(/^\//, '') as ActiveView;
+          setCurrentViewState(s || 'landing');
+        }
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, []);
 
   // Initialize from LocalStorage (strip legacy demo entries if any exist)
   useEffect(() => {

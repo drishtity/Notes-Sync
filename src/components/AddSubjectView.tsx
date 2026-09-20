@@ -32,14 +32,13 @@ export function AddSubjectView() {
   const [availableHours, setAvailableHours] = useState(3);
   const [currentPrep, setCurrentPrep] = useState(25);
   const [syllabusText, setSyllabusText] = useState('');
-  const [weakTopicsStr, setWeakTopicsStr] = useState('Banker\'s Algorithm, Page Replacement, Semaphores');
-  const [strongTopicsStr, setStrongTopicsStr] = useState('Process Scheduling, Introduction to OS');
+  const [weakTopicsStr, setWeakTopicsStr] = useState('');
+  const [strongTopicsStr, setStrongTopicsStr] = useState('');
   const [pastPapersText, setPastPapersText] = useState('');
   const [showPastPapers, setShowPastPapers] = useState(false);
 
   // Status & Error
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingStep, setLoadingStep] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Calculate days remaining
@@ -99,8 +98,6 @@ export function AddSubjectView() {
     setIsLoading(true);
 
     try {
-      setLoadingStep('Analyzing syllabus with Gemini AI...');
-      
       const res = await fetch('/api/analyze-syllabus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -116,7 +113,6 @@ export function AddSubjectView() {
       }
 
       const extracted = await res.json();
-      setLoadingStep('Calculating priority scores & learning effort...');
 
       // Parse user's confidence
       const weakList = weakTopicsStr.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
@@ -165,7 +161,6 @@ export function AddSubjectView() {
       }));
 
       // Generate Practice Questions
-      setLoadingStep('Generating high-priority practice questions...');
       let finalQuestions: PracticeQuestion[] = [];
       try {
         const qRes = await fetch('/api/generate-questions', {
@@ -210,7 +205,6 @@ export function AddSubjectView() {
       }
 
       // Generate Study Plan
-      setLoadingStep('Building personalized study plan...');
       const subjectId = `sub-${Date.now().toString(36)}`;
       const plan = generateStudyPlan(subjectId, scoredTopics, daysRemaining, availableHours);
 
@@ -238,7 +232,11 @@ export function AddSubjectView() {
       addSubject(newSubject);
     } catch (err: unknown) {
       console.error('Add Subject Error:', err);
-      setErrorMessage(err instanceof Error ? err.message : 'Error analyzing syllabus. Please verify your inputs.');
+      setErrorMessage(
+        err instanceof Error && !err.message.includes('API') && !err.message.includes('key')
+          ? err.message
+          : 'Unable to analyze syllabus. Please verify your inputs and try again.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -268,18 +266,12 @@ export function AddSubjectView() {
       {/* Analysis Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="max-w-md w-full bg-white rounded-3xl p-6 text-center space-y-4 shadow-2xl border border-zinc-200">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Loader2 className="w-7 h-7 animate-spin" />
+          <div className="max-w-xs w-full bg-white rounded-3xl p-6 text-center space-y-3 shadow-2xl border border-zinc-200">
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 animate-spin" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-zinc-900">Analyzing Syllabus</h3>
-              <p className="text-xs text-zinc-500 mt-1">
-                Our academic decision engine is extracting topics and computing priority weights.
-              </p>
-            </div>
-            <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200 font-mono text-xs text-indigo-700 font-semibold">
-              {loadingStep || 'Processing course syllabus...'}
+              <h3 className="text-base font-bold text-zinc-900">Analysing...</h3>
             </div>
           </div>
         </div>
@@ -494,7 +486,7 @@ export function AddSubjectView() {
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>{loadingStep || 'Analyzing Subject...'}</span>
+                <span>Analysing...</span>
               </>
             ) : (
               <>
