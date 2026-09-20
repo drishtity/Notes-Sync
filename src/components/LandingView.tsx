@@ -18,9 +18,9 @@ export function LandingView() {
   const { setCurrentView } = useNotesSync();
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-between">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-x-hidden w-full max-w-full">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 lg:pt-20 lg:pb-24">
+      <section className="relative overflow-hidden pt-12 pb-16 lg:pt-20 lg:pb-24 w-full">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
           {/* Badge */}
@@ -46,10 +46,10 @@ export function LandingView() {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => setCurrentView('add-subject')}
-              className="w-full sm:w-auto px-8 py-4 text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-8 py-4 text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
             >
               <span>+ Add Your Subject Syllabus</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 

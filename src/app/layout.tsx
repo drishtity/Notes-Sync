@@ -26,9 +26,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50/50 text-zinc-900 selection:bg-indigo-500 selection:text-white">
+      <body className="min-h-full flex flex-col bg-zinc-50/50 text-zinc-900 selection:bg-indigo-500 selection:text-white overflow-x-hidden w-full">
         <NotesSyncProvider>
           {children}
         </NotesSyncProvider>

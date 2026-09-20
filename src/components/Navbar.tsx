@@ -15,7 +15,8 @@ import {
   Plus, 
   ChevronDown,
   Layers,
-  Trash2
+  Trash2,
+  ArrowRight
 } from 'lucide-react';
 
 export function Navbar() {
@@ -63,32 +64,46 @@ export function Navbar() {
           </div>
 
           {/* Navigation Links (Desktop: xl and above) */}
-          <nav className="hidden xl:flex items-center space-x-1 shrink-0">
-            {navItems.map((item) => {
-              if (item.requiresSubject && !activeSubject) return null;
-              const isActive = currentView === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setCurrentView(item.id)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                    isActive
-                      ? 'bg-zinc-900 text-white shadow-xs'
-                      : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                  }`}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+          {currentView !== 'landing' && (
+            <nav className="hidden xl:flex items-center space-x-1 shrink-0">
+              {navItems.map((item) => {
+                if (item.requiresSubject && !activeSubject) return null;
+                const isActive = currentView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setCurrentView(item.id)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
+                      isActive
+                        ? 'bg-zinc-900 text-white shadow-xs'
+                        : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          )}
 
           {/* Action Buttons & Subject Picker */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
+            {/* If on landing view and subjects exist, offer quick jump to Dashboard */}
+            {currentView === 'landing' && subjects.length > 0 && (
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-lg transition shadow-xs shrink-0 whitespace-nowrap"
+                title="Return to your active study dashboard"
+              >
+                <span>Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             {/* What to study CTA: Compact, prominent, no text-wrap */}
-            {activeSubject && (
+            {activeSubject && currentView !== 'landing' && (
               <button
                 onClick={() => setIsWhatToStudyOpen(true)}
                 className="whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition-all active:scale-95"
@@ -101,7 +116,7 @@ export function Navbar() {
             )}
 
             {/* Limited Time Mode trigger */}
-            {activeSubject && (
+            {activeSubject && currentView !== 'landing' && (
               <button
                 onClick={() => setIsLimitedTimeOpen(true)}
                 className="hidden md:flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 rounded-lg transition shrink-0"
@@ -113,7 +128,7 @@ export function Navbar() {
             )}
 
             {/* Active Subject Selector Dropdown & Delete Button */}
-            {subjects.length > 0 ? (
+            {subjects.length > 0 && currentView !== 'landing' ? (
               <div className="flex items-center gap-1 shrink-0">
                 <div className="relative group">
                   <select
@@ -157,7 +172,7 @@ export function Navbar() {
         </div>
 
         {/* Sub-navigation bar for screens below xl */}
-        {activeSubject && (
+        {activeSubject && currentView !== 'landing' && currentView !== 'add-subject' && (
           <div className="flex xl:hidden overflow-x-auto py-2 space-x-1 border-t border-zinc-100 scrollbar-none">
             {navItems.map((item) => {
               const isActive = currentView === item.id;
